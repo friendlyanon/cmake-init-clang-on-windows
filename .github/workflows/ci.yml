@@ -1,0 +1,43 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+    - master
+
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [macos, ubuntu, windows]
+
+    runs-on: ${{ matrix.os }}-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install tools
+      shell: bash
+      run: |
+        if [ ${{ matrix.os }} = ubuntu ]; then
+          sudo apt-get install clang-tidy cppcheck -y -q
+        elif [ ${{ matrix.os }} = windows ]; then
+          choco install -y ninja
+        fi
+
+    - name: Configure
+      run: cmake --preset=ci-${{ matrix.os }}
+
+    - name: Build
+      run: cmake --build build --config Release -j 2
+
+    - name: Install
+      run: cmake --install build --config Release --prefix prefix
+
+    - name: Test
+      working-directory: build
+      run: ctest --output-on-failure -C Release -j 2
