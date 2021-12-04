@@ -18,9 +18,9 @@ set(cl_version 19.29.30137)
 
 # Clang needs to use MSVC's system .lib files
 add_link_options(
-    "LINKER:SHELL:/libpath:C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Tools\\MSVC\\${msvc_version}\\lib\\x64"
-    "LINKER:SHELL:/libpath:C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\${windows_kit_version}\\ucrt\\x64"
-    "LINKER:SHELL:/libpath:C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\${windows_kit_version}\\um\\x64"
+    "LINKER:SHELL:\"/libpath:C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/${msvc_version}/lib/x64\""
+    "LINKER:SHELL:\"/libpath:C:/Program Files (x86)/Windows Kits/10/Lib/${windows_kit_version}/ucrt/x64\""
+    "LINKER:SHELL:\"/libpath:C:/Program Files (x86)/Windows Kits/10/Lib/${windows_kit_version}/um/x64\""
 )
 
 # Standard headers
