@@ -11,10 +11,14 @@ set(windows_kit_version 10.0.21381.0)
 # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md#microsoft-visual-c
 set(msvc_version 14.29.30135)
 
-# Clang needs to use MSVC link.exe and needs the system .lib files
+# You have to find it out on your own by running cl.exe, windows-2019 has this one
+set(cl_version 19.29.30137)
+
+# Clang needs to use MSVC's system .lib files
 set(CMAKE_EXE_LINKER_FLAGS_INIT "\
--Xlinker /libpath:\"C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\${windows_kit_version}\\um\\x64\" \
--Xlinker /libpath:\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Tools\\MSVC\\${msvc_version}\\lib\\x64\"\
+-Xlinker \"/libpath:C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Tools\\MSVC\\${msvc_version}\\lib\\x64\" \
+-Xlinker \"/libpath:C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\${windows_kit_version}\\ucrt\\x64\" \
+-Xlinker \"/libpath:C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\${windows_kit_version}\\um\\x64\"\
 ")
 set(CMAKE_SHARED_LINKER_FLAGS_INIT "${CMAKE_EXE_LINKER_FLAGS_INIT}")
 
@@ -23,10 +27,9 @@ include_directories(
     SYSTEM
     "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/${msvc_version}/include"
     "C:/Program Files (x86)/Windows Kits/10/include/${windows_kit_version}/ucrt"
-    "C:/Program Files (x86)/Windows Kits/10/include/${windows_kit_version}/um"
     "C:/Program Files (x86)/Windows Kits/10/include/${windows_kit_version}/shared"
+    "C:/Program Files (x86)/Windows Kits/10/include/${windows_kit_version}/um"
 )
 
-# This is a guess. Need to look deeper into why Windows.h business gets
-# involved with standard headers.
-add_compile_definitions(WIN32_MEAN_AND_LEAN NOMINMAX)
+# Tell Clang what version of cl.exe to emulate, so it sets the defines up correctly
+add_compile_options("-fms-compatibility-version=${cl_version}")
