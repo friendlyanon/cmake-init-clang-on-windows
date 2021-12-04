@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.13)
+
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
 
@@ -15,12 +17,11 @@ set(msvc_version 14.29.30135)
 set(cl_version 19.29.30137)
 
 # Clang needs to use MSVC's system .lib files
-set(CMAKE_EXE_LINKER_FLAGS_INIT "\
--Xlinker \"/libpath:C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Tools\\MSVC\\${msvc_version}\\lib\\x64\" \
--Xlinker \"/libpath:C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\${windows_kit_version}\\ucrt\\x64\" \
--Xlinker \"/libpath:C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\${windows_kit_version}\\um\\x64\"\
-")
-set(CMAKE_SHARED_LINKER_FLAGS_INIT "${CMAKE_EXE_LINKER_FLAGS_INIT}")
+add_link_options(
+    "LINKER:SHELL:/libpath:C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Tools\\MSVC\\${msvc_version}\\lib\\x64"
+    "LINKER:SHELL:/libpath:C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\${windows_kit_version}\\ucrt\\x64"
+    "LINKER:SHELL:/libpath:C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\${windows_kit_version}\\um\\x64"
+)
 
 # Standard headers
 include_directories(
